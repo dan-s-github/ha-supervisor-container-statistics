@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+#
+# Sync custom_components/supervisor_container_statistics to a real
+# Supervised/HAOS host over SSH (e.g. the "Terminal & SSH" or "Advanced SSH &
+# Web Terminal" add-on) and restart Home Assistant Core so the change takes
+# effect. Override the connection details via env vars, e.g.:
+#
+#   DEPLOY_HOST=dev-raspi.local DEPLOY_PORT=22 ./scripts/deploy
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+DEPLOY_HOST="${DEPLOY_HOST:-dev-raspi.local}"
+DEPLOY_PORT="${DEPLOY_PORT:-22}"
+DEPLOY_USER="${DEPLOY_USER:-root}"
+
+COMPONENT="supervisor_container_statistics"
+
+echo "Syncing ${COMPONENT} to ${DEPLOY_USER}@${DEPLOY_HOST}:${DEPLOY_PORT}:/config/custom_components/${COMPONENT}/"
+rsync -av --delete \
+    -e "ssh -p ${DEPLOY_PORT}" \
+    "custom_components/${COMPONENT}/" \
+    "${DEPLOY_USER}@${DEPLOY_HOST}:/config/custom_components/${COMPONENT}/"
+
+echo "Restarting Home Assistant Core on ${DEPLOY_HOST}..."
+ssh -p "${DEPLOY_PORT}" "${DEPLOY_USER}@${DEPLOY_HOST}" ha core restart

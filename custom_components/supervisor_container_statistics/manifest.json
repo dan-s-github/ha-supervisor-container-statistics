@@ -1,0 +1,16 @@
+{
+  "domain": "supervisor_container_statistics",
+  "name": "Supervisor Container Statistics",
+  "after_dependencies": [
+    "hassio"
+  ],
+  "codeowners": [
+    "@dan-s-github"
+  ],
+  "config_flow": true,
+  "documentation": "https://github.com/dan-s-github/ha-supervisor-container-statistics",
+  "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/dan-s-github/ha-supervisor-container-statistics/issues",
+  "requirements": [],
+  "version": "0.1.0"
+}
